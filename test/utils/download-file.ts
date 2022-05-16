@@ -1,8 +1,10 @@
-const download = require('image-downloader');
+import download from 'image-downloader';
 
-export function downloadFile(url, filepath) {
-  return download.image({
+export async function downloadFile(url, filepath): Promise<string> {
+  const { filename } = await download.image({
     url,
-    dest: filepath
+    dest: filepath,
   });
+
+  return filename;
 }

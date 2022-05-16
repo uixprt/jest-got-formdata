@@ -27,11 +27,10 @@ test.only('public file upload', async () => {
     Math.random() * 6796,
   )}_thumb.jpg`;
   const imageUrl = `https://faces-img.xcdn.link/${imageName}`;
-
-  const { filename } = await downloadFile(imageUrl, fullPath);
-  console.log({ filename });
+  const imagePath = await downloadFile(imageUrl, fullPath);
+  console.log({ imagePath });
   const form = new FormDataNode();
-  form.set('file', await fileFromPath(filename, { type: 'image/png' }));
+  form.set('file', await fileFromPath(imagePath, { type: 'image/jpeg' }));
   const reqOptions = {
     method: 'POST' as Method,
     body: form,
