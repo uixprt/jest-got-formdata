@@ -1,10 +1,10 @@
-import got, { type Method, type ResponseType } from 'got-cjs';
+import got from 'got-cjs';
+import type { Method, ResponseType } from 'got-cjs';
 import path from 'path';
 import { FormData as FormDataNode } from 'formdata-node';
 import { fileFromPath } from 'formdata-node/file-from-path';
 import { BASE_URL } from './config/';
-import { getAuthorizationToken } from './utils';
-// import { PublicFile } from './models';
+import { getAuthorizationToken, downloadFile } from './utils';
 
 test.only('public file upload', async () => {
   const expectKeys = [
@@ -22,11 +22,16 @@ test.only('public file upload', async () => {
     'bucketName',
   ];
   const jwt = await getAuthorizationToken();
-  const fullPath = path.resolve(
-    'test/fixtures/thumb-lorem-face-3842_thumb.jpg',
-  );
+  const fullPath = path.resolve('test/loremface/');
+  const imageName = `thumb-lorem-face-${Math.floor(
+    Math.random() * 6796,
+  )}_thumb.jpg`;
+  const imageUrl = `https://faces-img.xcdn.link/${imageName}`;
+
+  const { filename } = await downloadFile(imageUrl, fullPath);
+  console.log({ filename });
   const form = new FormDataNode();
-  form.set('file', await fileFromPath(fullPath, { type: 'image/png' }));
+  form.set('file', await fileFromPath(filename, { type: 'image/png' }));
   const reqOptions = {
     method: 'POST' as Method,
     body: form,
